@@ -45,6 +45,117 @@
     }
     @keyframes spinSlow { to { transform: rotate(360deg); } }
     .spin-vinyl { animation: spinSlow 5s linear infinite; }
+
+    /* Dual-Horizontal 3D Flip Glowing Cards (Rose Gold Theme) */
+    .flip-card {
+      overflow: visible;
+      width: 100%;
+      height: 230px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .flip-content {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 600ms cubic-bezier(0.4, 0.2, 0.2, 1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+      border-radius: 16px;
+    }
+
+    .flip-card:hover .flip-content,
+    .flip-card.flipped .flip-content {
+      transform: rotateY(180deg);
+    }
+
+    .flip-front, .flip-back {
+      background-color: #2c0b16;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .flip-back {
+      justify-content: center;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Glowing Rotating Rose Gold Border */
+    .flip-back::before {
+      position: absolute;
+      content: ' ';
+      display: block;
+      width: 140px;
+      height: 180%;
+      background: linear-gradient(90deg, transparent, #ff8fa3, #ffb3c1, #ff4d6d, transparent);
+      animation: rotation_481 4000ms infinite linear;
+    }
+
+    .flip-back-content {
+      position: absolute;
+      width: 97%;
+      height: 97%;
+      background: linear-gradient(135deg, #3a101e 0%, #220710 100%);
+      border-radius: 14px;
+      color: #ffe6eb;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    @keyframes rotation_481 {
+      0% { transform: rotateZ(0deg); }
+      100% { transform: rotateZ(360deg); }
+    }
+
+    .flip-front {
+      transform: rotateY(180deg);
+      color: white;
+    }
+
+    .flip-front-overlay {
+      position: absolute;
+      inset: 0;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: linear-gradient(to top, rgba(44, 11, 22, 0.85) 0%, transparent 50%);
+    }
+
+    .flip-badge {
+      background-color: rgba(255, 143, 163, 0.3);
+      border: 1px solid rgba(255, 182, 193, 0.5);
+      color: #ffe6eb;
+      padding: 3px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+      width: fit-content;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .flip-desc {
+      width: 100%;
+      padding: 8px 10px;
+      background-color: rgba(34, 7, 16, 0.75);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 182, 193, 0.25);
+      border-radius: 10px;
+    }
+
+
+
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 select-none relative">
@@ -190,35 +301,172 @@
       );
     }
 
+    // 3. LOVE LETTER & DUAL-HORIZONTAL 3D FLIP PHOTO CARDS ON SCROLL
+    // 3. LOVE LETTER & DUAL-HORIZONTAL 3D FLIP PHOTO CARDS (8 PHOTOS)
     function LetterView({ onBack }) {
+      const [flippedIds, setFlippedIds] = useState({});
+
+      const toggleFlip = (id) => {
+        setFlippedIds((prev) => ({ ...prev, [id]: !prev[id] }));
+      };
+
+      const memoryCards = [
+        { 
+          id: 1, 
+          src: 'photo1.jpg', 
+          fallback: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80', 
+          badge: 'Memory #1', 
+          title: 'ပထမဆုံး အမှတ်တရ', 
+          date: 'Forever & Always 🤍',
+          hint: 'လှန်ကြည့်ရန် ထိပါ ✨'
+        },
+        { 
+          id: 2, 
+          src: 'photo2.jpg', 
+          fallback: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&q=80', 
+          badge: 'Memory #2', 
+          title: 'အပျော်ဆုံး နေ့ရက်လေး', 
+          date: 'My Favorite Person 💖',
+          hint: 'လှန်ကြည့်ရန် ထိပါ ✨'
+        },
+        { 
+          id: 3, 
+          src: 'photo3.jpg', 
+          fallback: 'https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=400&q=80', 
+          badge: 'Memory #3', 
+          title: 'အတူရှိခဲ့တဲ့ အချိန်များ', 
+          date: 'Sweet Moments 🌸',
+          hint: 'လှန်ကြည့်ရန် ထိပါ ✨'
+        },
+        { 
+          id: 4, 
+          src: 'photo4.jpg', 
+          fallback: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80', 
+          badge: 'Memory #4', 
+          title: 'ကိုယ့်ရဲ့ ကမ္ဘာငယ်လေး', 
+          date: 'Love You Endlessly 🥰',
+          hint: 'လှန်ကြည့်ရန် ထိပါ ✨'
+        },
+        { 
+          id: 5, 
+          src: 'photo5.jpg', 
+          fallback: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80', 
+          badge: 'Memory #5', 
+          title: 'ချစ်စရာ အခိုက်အတန့်', 
+          date: 'My World 🌟',
+          hint: 'လှန်ကြည့်ရန် ထိပါ ✨'
+        },
+        { 
+          id: 6, 
+          src: 'photo6.jpg', 
+          fallback: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80', 
+          badge: 'Memory #6', 
+          title: 'အထူးဆုံး နေ့ရက်', 
+          date: 'Our Special Date 🥰',
+          hint: 'လှန်ကြည့်ရန် ထိပါ ✨'
+        },
+        { 
+          id: 7, 
+          src: 'photo7.jpg', 
+          fallback: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=80', 
+          badge: 'Memory #7', 
+          title: 'ထာဝရ လက်တွဲဖော်', 
+          date: 'Always Together 💕',
+          hint: 'လှန်ကြည့်ရန် ထိပါ ✨'
+        },
+        { 
+          id: 8, 
+          src: 'photo8.jpg', 
+          fallback: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&q=80', 
+          badge: 'Memory #8', 
+          title: 'အလှပဆုံး အနာဂတ်', 
+          date: 'True Love 🤍',
+          hint: 'လှန်ကြည့်ရန် ထိပါ ✨'
+        }
+      ];
+
       return (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center max-w-4xl w-full px-4">
-          <div className="relative flex flex-col md:flex-row items-center justify-center w-full gap-6">
-            <div className="parchment p-6 sm:p-10 rounded-2xl max-w-lg w-full text-sm sm:text-base leading-relaxed whitespace-pre-line font-sans-cute font-medium">
-              {`"ကိုယ့်တစ်နေ့တာရဲ့ ပင်ပန်းသမျှတွေဟာ မင်းရဲ့အပြုံးတစ်ခုတည်းနဲ့တင် အကုန်ပျောက်သွားစေနိုင်တယ်။"
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          exit={{ opacity: 0 }} 
+          className="flex flex-col items-center max-w-2xl w-full px-4 py-6 max-h-[85vh] overflow-y-auto"
+        >
+          <h2 className="font-script text-4xl sm:text-5xl text-pink-200 mb-4 drop-shadow-md">Our Love Story</h2>
+          
+          {/* Top Love Letter Box */}
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="parchment p-6 sm:p-8 rounded-3xl w-full text-sm sm:text-base leading-relaxed font-sans-cute font-medium space-y-4 shadow-2xl mb-6"
+          >
+            <p>"ကိုယ်တစ်နေ့တာရဲ့ ပင်ပန်းသမျှဟာ မင်းရဲ့အပြုံးတစ်ခုတည်းနဲ့တင် အကုန်ပျောက်သွားစေနိုင်တယ်။"</p>
+            <p>"ဘယ်လို အချိန်တွေ၊ အခြေအနေတွေပဲ ရောက်လာပါစေ... ကိုယ်ကတော့ မင်းလက်ကိုပဲ အမြဲတွဲထားမှာပါ။"</p>
+            <p>"မင်းနဲ့တွေ့ရတဲ့ နေ့ကစပြီး ကိုယ့်ဘဝက တကယ် အဓိပ္ပာယ်ရှိလာခဲ့တာပါ။"</p>
+            <p className="font-bold text-[#4a1525]">"ကမ္ဘာပေါ်မှာ ဘယ်အရာကမှ မင်းလောက် ကိုယ့်အတွက် အရေးမပါပါဘူး၊ မင်းလေးရယ်။ 🤍"</p>
+          </motion.div>
 
-                "ဘယ်လို အချိန်တွေ၊ အခြေအနေတွေပဲ ရောက်လာပါစေ... ကိုယ်ကတော့ မင်းလက်ကိုပဲ အမြဲတွဲထားမှာပါ။"
+          {/* Scroll Down Prompt */}
+          <motion.div 
+            animate={{ y: [0, 6, 0] }} 
+            transition={{ repeat: Infinity, duration: 1.5 }}
+            className="text-xs font-sans-cute text-pink-300 mb-5 tracking-wider uppercase"
+          >
+            ⬇ အောက်သို့ ဆွဲပါ ⬇
+          </motion.div>
 
-                "မင်းနဲ့တွေ့ရတဲ့ နေ့ကစပြီး ကိုယ့်ဘဝက တကယ် အဓိပ္ပာယ်ရှိလာခဲ့တာပါ။"
+          {/* Dual-Horizontal 3D Flip Image Cards Grid (8 Photos) */}
+          <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full mb-6">
+            {memoryCards.map((card, idx) => (
+              <motion.div
+                key={card.id}
+                initial={{ opacity: 0, scale: 0.85, y: 30 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: (idx % 2) * 0.1 }}
+                onClick={() => toggleFlip(card.id)}
+                className={`flip-card ${flippedIds[card.id] ? 'flipped' : ''}`}
+              >
+                <div className="flip-content">
+                  
+                  {/* Card Back */}
+                  <div className="flip-back">
+                    <div className="flip-back-content font-sans-cute">
+                      <div className="w-12 h-12 rounded-full bg-pink-500/20 border border-pink-400/40 flex items-center justify-center text-2xl shadow-lg">
+                        💖
+                      </div>
+                      <strong className="text-sm text-pink-200">{card.hint}</strong>
+                      <span className="text-[11px] text-pink-300/70">Hover or Tap</span>
+                    </div>
+                  </div>
 
-                "ကမ္ဘာပေါ်မှာ ဘယ်အရာကမှ မင်းလောက် ကိုယ့်အတွက် အရေးမပါပါဘူး၊ မင်းလေးရယ်။🤍""`}
-            </div>
+                  {/* Card Front */}
+                  <div className="flip-front">
+                    <img 
+                      src={card.src} 
+                      alt={card.title} 
+                      className="w-full h-full object-cover" 
+                      onError={(e) => { e.target.src = card.fallback; }}
+                    />
+                    <div className="flip-front-overlay font-sans-cute">
+                      <small className="flip-badge">{card.badge}</small>
+                      <div className="flip-desc text-left">
+                        <div className="flex justify-between items-center text-xs text-pink-100 font-bold">
+                          <span>{card.title}</span>
+                          <span>🤍</span>
+                        </div>
+                        <p className="text-[10px] text-pink-300 mt-1">{card.date}</p>
+                      </div>
+                    </div>
+                  </div>
 
-            {/* Polaroid Photo Placeholders (photo1.jpg & photo2.jpg ထည့်ရန်နေရာ) */}
-            <div className="flex md:flex-col gap-4 z-10">
-              <motion.div whileHover={{ rotate: 0, scale: 1.05 }} className="bg-white p-3 pb-8 shadow-2xl rotate-3 rounded-2xl w-40 border border-pink-100 text-center">
-                <img src="photo1.jpg" alt="Our Memory 1" className="w-full h-32 object-cover rounded-xl bg-pink-100 mb-2" onError={(e)=>{e.target.src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80"}} />
-                <span className="font-script text-lg text-neutral-800">Forever 🤍</span>
+                </div>
               </motion.div>
-
-              <motion.div whileHover={{ rotate: 0, scale: 1.05 }} className="bg-white p-3 pb-8 shadow-2xl -rotate-3 rounded-2xl w-40 border border-pink-100 text-center">
-                <img src="photo2.jpg" alt="Our Memory 2" className="w-full h-32 object-cover rounded-xl bg-pink-100 mb-2" onError={(e)=>{e.target.src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&q=80"}} />
-                <span className="font-script text-lg text-neutral-800">My Love ✨</span>
-              </motion.div>
-            </div>
-
+            ))}
           </div>
-          <motion.button whileHover={{ scale: 1.05 }} onClick={onBack} className="btn-pill mt-8">◀ Back to Menu</motion.button>
+
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={onBack} className="btn-pill mt-2 mb-4">◀ Back to Menu</motion.button>
         </motion.div>
       );
     }
@@ -482,21 +730,72 @@
       );
     }
 
+    // 8. PROPOSAL GAME VIEW (Fixed for Mobile Touch & Click)
     function GameView({ onBack }) {
       const [accepted, setAccepted] = useState(false);
       const [noPos, setNoPos] = useState({ x: 0, y: 0 });
+      const [noCount, setNoCount] = useState(0);
+
+      const noTexts = [
+        "No",
+        "သေချာလို့လား? 🥺",
+        "မရဘူးနော် 😜",
+        "YES ပဲနှိပ်ပါ 💖",
+        "ထပ်စဉ်းစားဦးလေ 🙈",
+        "မိအောင်ဖမ်းကြည့် 🏃‍♂️💨"
+      ];
+
+      const moveNoButton = (e) => {
+        if (e) e.preventDefault(); // ဖုန်းတွင် Tap လုပ်စဉ် Click မဖြစ်စေရန် တားဆီးခြင်း
+        const randomX = (Math.random() - 0.5) * 180; // Screen အပြင်မထွက်စေရန် ချိန်ညှိထားသည်
+        const randomY = (Math.random() - 0.5) * 140;
+        setNoPos({ x: randomX, y: randomY });
+        setNoCount((prev) => prev + 1);
+      };
 
       return (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center max-w-md w-full px-4">
-          <div className="text-6xl mb-4">💖</div>
-          <h2 className="font-script text-4xl sm:text-5xl text-pink-200 mb-8">{accepted ? "ယေး!... ကိုယ်လည်း မင်းကို အဆုံးမရှိ ထာဝရ ချစ်နေမှာပါ... 🥰" : "ကိုယ့်အနားမှာ ရာသက်ပန် အမြဲတူတူ ရှိနေပေးမယ်မလားဟင်...?"}</h2>
+          <motion.div 
+            animate={{ scale: [1, 1.15, 1] }} 
+            transition={{ repeat: Infinity, duration: 1.5 }}
+            className="text-6xl mb-4"
+          >
+            {accepted ? "💍" : "💖"}
+          </motion.div>
+
+          <h2 className="font-script text-3xl sm:text-4xl text-pink-200 mb-8 leading-relaxed">
+            {accepted 
+              ? "ယေး!... ကိုယ်လည်း မင်းကို အဆုံးမရှိ ထာဝရ ချစ်နေမှာပါ... 🥰" 
+              : "ကိုယ့်အနားမှာ ရာသက်ပန် အမြဲတူတူ ရှိနေပေးမယ်မလားဟင်..."}
+          </h2>
+
           {!accepted && (
-            <div className="flex gap-6 items-center justify-center relative h-24 w-full">
-              <button onClick={() => setAccepted(true)} className="btn-pill text-lg">YES! 💍</button>
-              <motion.button animate={{ x: noPos.x, y: noPos.y }} onMouseEnter={() => setNoPos({x: (Math.random()-0.5)*150, y: (Math.random()-0.5)*100})} className="btn-pill text-base bg-white/20 text-pink-200 border border-pink-300/30">No</motion.button>
+            <div className="flex gap-6 items-center justify-center relative h-32 w-full">
+              {/* YES Button (No ကို နှိပ်လေ YES ခလုတ်က ပိုကြီးလာလေ ဖြစ်မည်) */}
+              <motion.button 
+                animate={{ scale: 1 + Math.min(noCount * 0.08, 0.5) }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setAccepted(true)} 
+                className="btn-pill text-lg z-10"
+              >
+                YES! 💍
+              </motion.button>
+
+              {/* Runaway NO Button (ဖုန်းရော ကွန်ပျူတာပါ အလုပ်လုပ်သည်) */}
+              <motion.button 
+                animate={{ x: noPos.x, y: noPos.y }}
+                transition={{ type: "spring", stiffness: 350, damping: 20 }}
+                onMouseEnter={moveNoButton}
+                onTouchStart={moveNoButton}
+                onClick={moveNoButton}
+                className="btn-pill text-sm sm:text-base bg-white/20 text-pink-200 border border-pink-300/30 whitespace-nowrap select-none"
+              >
+                {noTexts[noCount % noTexts.length]}
+              </motion.button>
             </div>
           )}
-          <motion.button whileHover={{ scale: 1.05 }} onClick={onBack} className="btn-pill mt-10">◀ Back to Menu</motion.button>
+
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={onBack} className="btn-pill mt-10">◀ Back to Menu</motion.button>
         </motion.div>
       );
     }
