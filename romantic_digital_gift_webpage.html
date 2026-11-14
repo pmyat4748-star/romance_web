@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>For My Love - Special Gift</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/framer-motion@10.16.5/dist/framer-motion.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Quicksand:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      background: linear-gradient(135deg, #2c0b16 0%, #4a1525 50%, #220710 100%); 
+      color: #ffe6eb; 
+      font-family: 'Playfair Display', serif; 
+      overflow-x: hidden; 
+    }
+    .font-script { font-family: 'Alex Brush', cursive; }
+    .font-sans-cute { font-family: 'Quicksand', sans-serif; }
+    .parchment { 
+      background: linear-gradient(135deg, #fff5f7 0%, #fde2e4 100%); 
+      color: #5c1d24; 
+      box-shadow: 0 20px 40px rgba(0,0,0,.4); 
+      border: 1px solid #ffccd5;
+    }
+    .btn-pill { 
+      background: linear-gradient(135deg, #ff8fa3 0%, #ffb3c1 100%); 
+      color: #4a1525; 
+      font-family: 'Quicksand', sans-serif; 
+      padding: 12px 32px; 
+      border-radius: 999px; 
+      box-shadow: 0 6px 20px rgba(255, 143, 163, 0.4); 
+      font-weight: 700; 
+      cursor: pointer; 
+      border: none;
+      transition: all 0.2s ease;
+    }
+    .btn-pill:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 143, 163, 0.6); }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 182, 193, 0.2);
+    }
+    @keyframes spinSlow { to { transform: rotate(360deg); } }
+    .spin-vinyl { animation: spinSlow 5s linear infinite; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 select-none relative">
+
+  <!-- Background Effects -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="absolute text-pink-300/20 text-2xl animate-pulse top-[10%] left-[15%]">💖</div>
+    <div class="absolute text-rose-300/20 text-3xl animate-bounce top-[70%] left-[80%]">✨</div>
+    <div class="absolute text-pink-400/15 text-4xl top-[30%] right-[10%]">🌸</div>
+  </div>
+
+  <div id="root" class="w-full flex items-center justify-center z-10"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+    const { motion, AnimatePresence } = Motion;
+
+    function App() {
+      const [view, setView] = useState('cover');
+
+      return (
+        <div className="w-full max-w-4xl flex flex-col items-center justify-center min-h-[85vh]">
+          <AnimatePresence mode="wait">
+            {view === 'cover' && <CoverView key="cover" onOpen={() => setView('hub')} />}
+            {view === 'hub' && <HubView key="hub" onNavigate={setView} />}
+            {view === 'letter' && <LetterView key="letter" onBack={() => setView('hub')} />}
+            {view === 'flower' && <FlowerView key="flower" onBack={() => setView('hub')} />}
+            {view === 'song' && <SongView key="song" onBack={() => setView('hub')} />}
+            {view === 'openwhen' && <OpenWhenView key="openwhen" onBack={() => setView('hub')} />}
+            {view === 'scratch' && <ScratchView key="scratch" onBack={() => setView('hub')} />}
+            {view === 'game' && <GameView key="game" onBack={() => setView('hub')} />}
+          </AnimatePresence>
+        </div>
+      );
+    }
+
+    function CoverView({ onOpen }) {
+      return (
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center max-w-xl">
+          <h1 className="font-script text-6xl sm:text-7xl mb-6 text-pink-200 drop-shadow-lg">Happy Anniversary, Love!</h1>
+          <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.98 }} onClick={onOpen} className="cursor-pointer relative w-64 sm:w-72">
+            <svg viewBox="0 0 300 200" className="w-full">
+              <rect x="10" y="15" width="280" height="170" rx="10" fill="#fff0f3" stroke="#ffb3c1" strokeWidth="2"/>
+              <path d="M10 185 L150 95 L290 185" fill="#ffe0e6" stroke="#ff8fa3" strokeWidth="1.5"/>
+              <path d="M10 15 L150 112 L290 15" fill="#ffffff" stroke="#ffb3c1" strokeWidth="2"/>
+              <circle cx="150" cy="108" r="24" fill="#ff4d6d"/>
+              <text x="150" y="114" fill="white" fontSize="16" textAnchor="middle">💖</text>
+            </svg>
+          </motion.div>
+          <p onClick={onOpen} className="font-sans-cute text-xl text-pink-200 mt-6 cursor-pointer font-bold">✨ Tap to open your gift ✨</p>
+        </motion.div>
+      );
+    }
+
+    function HubView({ onNavigate }) {
+      const [timeTogether, setTimeTogether] = useState('');
+      useEffect(() => {
+        const start = new Date('2025-11-14T00:00:00');
+        const timer = setInterval(() => {
+          const diff = Math.max(0, Date.now() - start);
+          const d = Math.floor(diff / 86400000);
+          const h = Math.floor((diff / 3600000) % 24);
+          const m = Math.floor((diff / 60000) % 60);
+          const s = Math.floor((diff / 1000) % 60);
+          setTimeTogether(`${d} Days • ${h} Hrs • ${m} Mins • ${s} Secs Together`);
+        }, 1000);
+        return () => clearInterval(timer);
+      }, []);
+
+      const items = [
+        { id: 'letter', emoji: '💌', label: 'Love Letter' },
+        { id: 'flower', emoji: '💐', label: 'Rose Bouquet' },
+        { id: 'song', emoji: '🎵', label: 'Our Song' },
+        { id: 'openwhen', emoji: '✉️', label: 'Open When...' },
+        { id: 'scratch', emoji: '✨', label: 'Secret Scratch' },
+        { id: 'game', emoji: '💖', label: 'One Question' },
+      ];
+
+      return (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center max-w-3xl w-full px-4">
+          <h2 className="font-script text-5xl sm:text-6xl text-pink-200 mb-2">For My Favorite Person</h2>
+          <div className="text-xs font-sans-cute tracking-widest uppercase glass-card px-5 py-2 rounded-full text-pink-100 mb-8">{timeTogether}</div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 sm:gap-8 w-full">
+            {items.map((item) => (
+              <motion.div key={item.id} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.95 }} onClick={() => onNavigate(item.id)} className="cursor-pointer flex flex-col items-center glass-card p-6 rounded-3xl shadow-xl transition-all border border-pink-300/20">
+                <div className="text-4xl sm:text-5xl mb-2">{item.emoji}</div>
+                <span className="text-base font-sans-cute font-bold text-pink-100">{item.label}</span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      );
+    }
+
+    function LetterView({ onBack }) {
+      return (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center max-w-4xl w-full px-4">
+          <div className="relative flex flex-col md:flex-row items-center justify-center w-full gap-6">
+            <div className="parchment p-6 sm:p-10 rounded-2xl max-w-lg w-full text-sm sm:text-base leading-relaxed whitespace-pre-line font-sans-cute font-medium">
+              {`I hope you know how much you mean to me, not just because you're my partner, but because of the wonderful person you are. I appreciate every little thing about you—the way you care, your sweet smile, and how you brighten my days.
+
+Having you in my life is my greatest blessing. Thank you for choosing me and for loving me. 🤍`}
+            </div>
+          </div>
+          <motion.button whileHover={{ scale: 1.05 }} onClick={onBack} className="btn-pill mt-8">◀ Back to Menu</motion.button>
+        </motion.div>
+      );
+    }
+
+    function FlowerView({ onBack }) {
+      return (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center max-w-4xl w-full px-4">
+          <div className="bg-gradient-to-b from-[#ff4d6d] to-[#c9184a] border-4 border-pink-200 rounded-3xl p-8 flex flex-col items-center shadow-2xl mx-auto mb-4">
+            <div className="text-7xl mb-2">💐</div>
+            <p className="font-script text-3xl sm:text-4xl text-pink-100">Flowers for you</p>
+          </div>
+          <motion.button whileHover={{ scale: 1.05 }} onClick={onBack} className="btn-pill mt-4">◀ Back to Menu</motion.button>
+        </motion.div>
+      );
+    }
+
+    // 5. SONG VIEW (Music Player with Song Name, Progress Bar & Time Tracker)
+    function SongView({ onBack }) {
+      const [isPlaying, setIsPlaying] = useState(false);
+      const [currentTime, setCurrentTime] = useState(0);
+      const [duration, setDuration] = useState(0);
+      const audioRef = useRef(null);
+
+      const songTitle = "Our Special Theme Song"; // <-- ဤနေရာတွင် သီချင်းနာမည်ကို ပြောင်းနိုင်ပါသည်
+
+      const togglePlay = () => {
+        if (isPlaying) {
+          audioRef.current.pause();
+        } else {
+          audioRef.current.play();
+        }
+        setIsPlaying(!isPlaying);
+      };
+
+      const handleTimeUpdate = () => {
+        setCurrentTime(audioRef.current.currentTime);
+      };
+
+      const handleLoadedMetadata = () => {
+        setDuration(audioRef.current.duration);
+      };
+
+      const handleSeek = (e) => {
+        const seekTime = (e.target.value / 100) * duration;
+        audioRef.current.currentTime = seekTime;
+        setCurrentTime(seekTime);
+      };
+
+      const formatTime = (secs) => {
+        if (isNaN(secs)) return "0:00";
+        const m = Math.floor(secs / 60);
+        const s = Math.floor(secs % 60);
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+      };
+
+      return (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center max-w-4xl w-full px-4">
+          <h2 className="text-3xl sm:text-5xl mb-6 text-center text-pink-200"><span className="font-script text-5xl">Our Special</span> Song</h2>
+          <div className="flex flex-col items-center justify-center gap-6 w-full max-w-md">
+            
+            {/* Music Player Card */}
+            <div className="parchment p-7 rounded-3xl w-full flex flex-col items-center shadow-2xl relative overflow-hidden">
+              <audio 
+                ref={audioRef} 
+                src="Westlife_-_My_Love_(Official_Video)(256k).mp3" 
+                onTimeUpdate={handleTimeUpdate}
+                onLoadedMetadata={handleLoadedMetadata}
+                onEnded={() => setIsPlaying(false)}
+              />
+              
+              {/* Spinning Vinyl Record Animation */}
+              <div className={`w-32 h-32 rounded-full bg-neutral-950 border-4 border-pink-300/60 flex items-center justify-center shadow-2xl mb-4 ${isPlaying ? 'spin-vinyl' : ''}`}>
+                <div className="w-10 h-10 rounded-full bg-pink-500 border-2 border-white flex items-center justify-center text-white text-xs font-bold shadow-inner">
+                  {isPlaying ? '♫' : '❚❚'}
+                </div>
+              </div>
+
+              {/* Song Title */}
+              <h3 className="font-sans-cute text-xl font-bold text-[#5c1d24] mb-1">{songTitle}</h3>
+              <p className="text-xs font-sans-cute text-[#8a3b45] mb-4">Tap below to play our melody 🤍</p>
+
+              {/* Progress Bar & Time Tracker */}
+              <div className="w-full flex flex-col gap-1 mb-5">
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="100" 
+                  value={duration ? (currentTime / duration) * 100 : 0} 
+                  onChange={handleSeek}
+                  className="w-full accent-[#ff4d6d] cursor-pointer h-1.5 bg-pink-200 rounded-lg"
+                />
+                <div className="flex justify-between text-xs font-sans-cute text-[#8a3b45] font-semibold">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
+              </div>
+
+              {/* Play / Pause Button */}
+              <button 
+                onClick={togglePlay}
+                className="btn-pill text-base px-8 py-2.5 flex items-center gap-2 shadow-lg"
+              >
+                {isPlaying ? '⏸ Pause' : '▶ Play Song'}
+              </button>
+            </div>
+
+            <div className="parchment p-5 rounded-xl text-sm font-sans-cute font-semibold leading-relaxed text-center shadow-lg w-full">
+              This song will always remind me of the beautiful moments we share together. 🤍
+            </div>
+          </div>
+          <motion.button whileHover={{ scale: 1.05 }} onClick={onBack} className="btn-pill mt-6">◀ Back to Menu</motion.button>
+        </motion.div>
+      );
+    }
+
+    function OpenWhenView({ onBack }) {
+      const [note, setNote] = useState('');
+      return (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center max-w-2xl w-full text-center px-4">
+          <h2 className="font-script text-5xl text-pink-200 mb-6">Open When...</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+            <button onClick={() => setNote('Whenever you miss me, close your eyes and remember my warm hugs are waiting for you. ❤️')} className="parchment p-5 rounded-2xl font-sans-cute font-bold cursor-pointer text-left shadow-lg">💌 Open when you miss me</button>
+            <button onClick={() => setNote('Take a deep breath. You are capable of amazing things, and I believe in you always! 🌟')} className="parchment p-5 rounded-2xl font-sans-cute font-bold cursor-pointer text-left shadow-lg">🌧️ Open when you are stressed</button>
+          </div>
+          {note && <div className="parchment p-6 rounded-2xl mt-6 max-w-md w-full font-sans-cute font-semibold text-lg shadow-2xl">{note}</div>}
+          <motion.button whileHover={{ scale: 1.05 }} onClick={onBack} className="btn-pill mt-8">◀ Back to Menu</motion.button>
+        </motion.div>
+      );
+    }
+
+    function ScratchView({ onBack }) {
+      return (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center max-w-md w-full px-4">
+          <h2 className="font-script text-5xl text-pink-200 mb-2">Secret Surprise</h2>
+          <div className="parchment w-72 h-44 rounded-2xl flex items-center justify-center p-4 font-sans-cute font-bold text-base text-center shadow-2xl border-2 border-pink-300">
+            🎟️ FREE UNLIMITED DATES & CUDDLES!<br/>Redeemable anytime with me! ❤️
+          </div>
+          <motion.button whileHover={{ scale: 1.05 }} onClick={onBack} className="btn-pill mt-8">◀ Back to Menu</motion.button>
+        </motion.div>
+      );
+    }
+
+    function GameView({ onBack }) {
+      const [accepted, setAccepted] = useState(false);
+      const [noPos, setNoPos] = useState({ x: 0, y: 0 });
+
+      return (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center max-w-md w-full px-4">
+          <div className="text-6xl mb-4">💖</div>
+          <h2 className="font-script text-4xl sm:text-5xl text-pink-200 mb-8">{accepted ? "Yay! I love you endlessly! 🥰" : "Will you stay with me forever?"}</h2>
+          {!accepted && (
+            <div className="flex gap-6 items-center justify-center relative h-24 w-full">
+              <button onClick={() => setAccepted(true)} className="btn-pill text-lg">YES! 💍</button>
+              <motion.button animate={{ x: noPos.x, y: noPos.y }} onMouseEnter={() => setNoPos({x: (Math.random()-0.5)*150, y: (Math.random()-0.5)*100})} className="btn-pill text-base bg-white/20 text-pink-200 border border-pink-300/30">No</motion.button>
+            </div>
+          )}
+          <motion.button whileHover={{ scale: 1.05 }} onClick={onBack} className="btn-pill mt-10">◀ Back to Menu</motion.button>
+        </motion.div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
